@@ -131,17 +131,6 @@ pytest
 
 ## 📄 License
 
-*(Add the repository’s license here if available. If none is defined, you can remove this section or mark as unlicensed.)*
+MIT License
 
 ---
-
-## 📌 Notes
-
-This README synthesizes repository contents like the interactive CLI, governance layer, and agents. It is structured to help new users quickly understand and run the project from scratch. ([GitHub][2])
-
----
-
-If you want, I can also generate a **download ZIP link** or clone + compress script you can run locally.
-
-[1]: https://raw.githubusercontent.com/Centrale73/Exp1-Intent/main/requirements.txt "raw.githubusercontent.com"
-[2]: https://raw.githubusercontent.com/Centrale73/Exp1-Intent/main/main.py "raw.githubusercontent.com"
