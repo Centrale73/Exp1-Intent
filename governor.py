@@ -27,6 +27,7 @@ from pathlib import Path
 from typing import Callable, Dict, Optional
 
 from agno.agent import Agent
+from agno.models.base import Model
 
 from hooks.constitution_hook import create_constitution_hook, logger_hook
 from evals.judge_eval import create_intent_judge, default_escalation_hook
@@ -58,12 +59,16 @@ class IntentGovernor:
         Minimum passing score (1-10).  Default 7.
     judge_background : bool
         Run the judge asynchronously.  Default True.
+    judge_model : Model, optional
+        The Agno model instance to use for evaluation.
+        If None, the judge will not be pre-built (must be provided or defaults).
     """
 
     def __init__(
         self,
         constitution: str | Path = "constitutions/acme_corp.yaml",
         judge_criteria: str | Path = "criteria/brand_voice.txt",
+        judge_model: Optional[Model] = None,
         escalation_hook: Optional[Callable] = None,
         base_intent: str = "You are a support agent for Acme Corp.",
         strategy_overrides: Optional[Dict[str, str]] = None,
@@ -84,12 +89,17 @@ class IntentGovernor:
             base_intent=self.base_intent,
             strategy_overrides=self.strategy_overrides,
         )
-        self._judge = create_intent_judge(
-            criteria_path=self.judge_criteria_path,
-            escalation_hook=self.escalation_hook,
-            threshold=self.judge_threshold,
-            run_in_background=self.judge_background,
-        )
+        if judge_model:
+            self._judge = create_intent_judge(
+                criteria_path=self.judge_criteria_path,
+                model=judge_model,
+                escalation_hook=self.escalation_hook,
+                threshold=self.judge_threshold,
+                run_in_background=self.judge_background,
+            )
+        else:
+            self._judge = None
+            logger.warning("IntentGovernor initialised without a judge model.")
 
         logger.info(
             "IntentGovernor initialised — constitution=%s, criteria=%s",

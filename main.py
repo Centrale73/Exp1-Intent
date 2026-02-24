@@ -38,8 +38,8 @@ logging.basicConfig(
 logger = logging.getLogger("intent_governance")
 
 # ── imports (after path setup) ───────────────────────────────────────────────
-from agno.agent import Agent  # noqa: E402
-from agno.models.perplexity import Perplexity  # noqa: E402
+from agno.agent import Agent
+from models import get_model
 
 from evals import SlackEscalationHook
 from governor import IntentGovernor
@@ -65,6 +65,14 @@ SESSION_STATE = {
 def build_agent() -> tuple[Agent, IntentGovernor]:
     """Create and wrap an agent with the full Intent Governance Layer."""
 
+    # Select providers from environment
+    agent_provider = os.getenv("AGENT_PROVIDER", "perplexity")
+    judge_provider = os.getenv("JUDGE_PROVIDER", "perplexity")
+
+    # Instantiate models via factory
+    agent_model = get_model(provider=agent_provider)
+    judge_model = get_model(provider=judge_provider)
+
     # Create Slack hook if URL is provided
     slack_webhook = os.getenv("SLACK_WEBHOOK_URL")
     escalation_hook = SlackEscalationHook(slack_webhook) if slack_webhook else None
@@ -72,6 +80,7 @@ def build_agent() -> tuple[Agent, IntentGovernor]:
     governor = IntentGovernor(
         constitution=PROJECT_ROOT / "constitutions" / "acme_corp.yaml",
         judge_criteria=PROJECT_ROOT / "criteria" / "brand_voice.txt",
+        judge_model=judge_model,
         escalation_hook=escalation_hook,
         base_intent=(
             "You are a senior customer-support agent for Acme Corp. "
@@ -80,7 +89,7 @@ def build_agent() -> tuple[Agent, IntentGovernor]:
     )
 
     agent = Agent(
-        model=Perplexity(id="sonar-pro"),
+        model=agent_model,
         tools=[stripe_refund, send_email, cancel_subscription, process_chargeback],
         session_state=SESSION_STATE,
         markdown=True,

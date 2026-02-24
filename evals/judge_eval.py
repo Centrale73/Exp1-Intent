@@ -15,7 +15,7 @@ from typing import Callable, Optional
 
 import httpx
 from agno.eval.agent_as_judge import AgentAsJudgeEval
-from agno.models.perplexity import Perplexity
+from agno.models.base import Model
 
 logger = logging.getLogger("intent_governance.evals")
 
@@ -109,10 +109,10 @@ class SlackEscalationHook:
 
 def create_intent_judge(
     criteria_path: str | Path,
+    model: Model,
     escalation_hook: Optional[Callable] = None,
     threshold: int = 7,
     run_in_background: bool = True,
-    model_id: str = "sonar-pro",
 ) -> AgentAsJudgeEval:
     """
     Build an ``AgentAsJudgeEval`` instance configured for intent alignment.
@@ -121,6 +121,8 @@ def create_intent_judge(
     ----------
     criteria_path : str | Path
         Path to a plain-text file containing the numbered evaluation criteria.
+    model : Model
+        The Agno model instance to use for evaluation.
     escalation_hook : callable, optional
         Callback fired when the eval score falls below *threshold*.
         Defaults to ``default_escalation_hook``.
@@ -146,13 +148,14 @@ def create_intent_judge(
         threshold=threshold,
         on_fail=hook,
         run_in_background=run_in_background,
-        model=Perplexity(id=model_id),
+        model=model,
     )
 
     logger.info(
-        "Intent judge created — threshold=%d, background=%s, criteria_file=%s",
+        "Intent judge created — threshold=%d, background=%s, criteria_file=%s, model=%s",
         threshold,
         run_in_background,
         criteria_path.name,
+        type(model).__name__,
     )
     return evaluation
