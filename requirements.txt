@@ -1,0 +1,10 @@
+agno
+pyyaml
+python-dotenv
+httpx
+rich
+pytest
+openai
+anthropic
+langchain
+langgraph

@@ -1,0 +1,40 @@
+# ── Constitution: Acme Corp ──
+# Rules are keyed by tool function name.
+# Each rule has:
+#   condition  — a named business condition to evaluate
+#   action     — "approve", "reject", or "escalate"
+#   reason     — human-readable audit log message
+#   threshold  — (optional) numeric threshold for the condition
+#
+# The constitution hook evaluates rules top-to-bottom and stops on the
+# first matching reject/escalate.  If no rule matches, the call is approved.
+
+stripe_refund:
+  - condition: high_value
+    threshold: 100
+    action: reject
+    reason: "Only enterprise accounts can auto-refund amounts >= $100. Escalate to human."
+
+  - condition: any
+    action: approve
+    reason: "Standard refunds under threshold are auto-approved."
+
+cancel_subscription:
+  - condition: high_tenure
+    threshold: 730          # days — roughly 2 years
+    action: escalate
+    reason: "Long-term customer (>2 yr). Requires manager review before cancellation."
+
+  - condition: any
+    action: approve
+    reason: "Standard cancellation approved."
+
+process_chargeback:
+  - condition: any
+    action: escalate
+    reason: "All chargebacks require human approval (irreversible action)."
+
+send_email:
+  - condition: any
+    action: approve
+    reason: "Email dispatch is a low-risk action."
