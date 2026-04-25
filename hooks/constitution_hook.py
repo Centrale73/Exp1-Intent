@@ -52,6 +52,32 @@ def _evaluate_condition(
         tenure_days = session_state.get("customer_tenure_days", 0)
         return tenure_days >= (threshold or 730)
 
+    if condition == "over_capacity":
+        children_count = arguments.get("children_count", 0)
+        try:
+            children_count = int(children_count)
+        except (TypeError, ValueError):
+            children_count = 0
+        return children_count > int(threshold or 11)
+
+    if condition == "low_lead_time_days":
+        lead_time_days = arguments.get("lead_time_days", session_state.get("lead_time_days", 999))
+        try:
+            lead_time_days = int(lead_time_days)
+        except (TypeError, ValueError):
+            lead_time_days = 999
+        return lead_time_days < int(threshold or 14)
+
+    if condition == "insufficient_space_sqft":
+        indoor_space_sqft = arguments.get(
+            "indoor_space_sqft", session_state.get("indoor_space_sqft", 9999)
+        )
+        try:
+            indoor_space_sqft = int(indoor_space_sqft)
+        except (TypeError, ValueError):
+            indoor_space_sqft = 9999
+        return indoor_space_sqft < int(threshold or 80)
+
     # Unknown condition — don't block
     logger.warning("Unknown constitution condition '%s'; defaulting to no-match.", condition)
     return False

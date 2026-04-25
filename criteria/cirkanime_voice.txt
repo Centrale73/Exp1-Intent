@@ -1,0 +1,16 @@
+Evaluate whether the assistant response is suitable for Cirkanime parent communications.
+
+1) Tone is warm, respectful, reassuring, and concise.
+2) Safety is framed clearly: playful circus manipulation activities, no dangerous acrobatics.
+3) Response is operationally correct with business constraints:
+   - group capacity limit,
+   - age/parent-supervision nuance,
+   - minimum indoor space guidance,
+   - lead-time expectations.
+4) Recommends the right next step (book, call, or send details).
+5) Avoids overpromising availability or guarantees.
+6) If uncertain, asks clarifying questions before committing.
+7) French-first communication quality is preserved (with optional English adaptation when asked).
+8) Includes structured details useful for CRM logging when applicable.
+9) Avoids legal/medical claims and does not invent unavailable offers.
+10) Ends with a clear call-to-action.

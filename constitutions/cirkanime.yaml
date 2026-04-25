@@ -1,0 +1,56 @@
+# Cirkanime-specific governance rules for event-booking operations
+
+create_crm_contact:
+  - condition: any
+    action: approve
+    reason: "Lead creation is low-risk and should be automatic."
+
+create_crm_deal:
+  - condition: any
+    action: approve
+    reason: "Deal creation is low-risk and should be automatic."
+
+send_quote_email:
+  - condition: any
+    action: approve
+    reason: "Quote emails are standard pre-booking communication."
+
+create_booking:
+  - condition: over_capacity
+    threshold: 11
+    action: reject
+    reason: "Max participants exceeded (birthday child + up to 10 friends)."
+
+  - condition: low_lead_time_days
+    threshold: 14
+    action: escalate
+    reason: "Booking requested with less than 14 days lead time."
+
+  - condition: insufficient_space_sqft
+    threshold: 80
+    action: escalate
+    reason: "Insufficient indoor activity space (minimum 10x8 ft)."
+
+  - condition: any
+    action: approve
+    reason: "Booking requirements satisfied."
+
+reschedule_booking:
+  - condition: low_lead_time_days
+    threshold: 3
+    action: escalate
+    reason: "Last-minute reschedule requires manual review."
+
+  - condition: any
+    action: approve
+    reason: "Reschedule approved under normal constraints."
+
+issue_refund:
+  - condition: high_value
+    threshold: 100
+    action: escalate
+    reason: "High-value refunds require manual approval."
+
+  - condition: any
+    action: approve
+    reason: "Low-value refunds can be auto-approved."
