@@ -119,6 +119,17 @@ The system will run these through the agent and show outputs along with any gove
 
 ---
 
+
+## 🧩 Business Adaptation Example (Cirkanime)
+
+This repo now includes a concrete adaptation blueprint for an event-based business
+(Cirkanime):
+
+- `docs/cirkanime_engine_modifications.md` — recommended engine and agent topology
+- `constitutions/cirkanime.yaml` — event/booking governance policy example
+- `criteria/cirkanime_voice.txt` — judge criteria for parent-facing communication
+- `tools/crm_tools.py` — CRM + booking tool stubs for a creator-operated workflow
+
 ## 🧪 Tests
 
 Run the test suite with:
